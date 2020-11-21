@@ -7,7 +7,7 @@ export default function ThemeIndicator(isDark) {
   if (isDark) {
     return (
       <Fab size="small" aria-label={displayAlt}>
-        here <Brightness4Rounded />
+        <Brightness4Rounded />
       </Fab>
     );
   } else {
