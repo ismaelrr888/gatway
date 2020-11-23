@@ -4,10 +4,20 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 
+import { SnackbarProvider } from "notistack";
+
 ReactDOM.render(
-  <>
+  <SnackbarProvider
+    maxSnack={3}
+    iconVariant={{
+      success: "✅",
+      error: "✖️",
+      warning: "⚠️",
+      info: "ℹ️",
+    }}
+  >
     <App />
-  </>,
+  </SnackbarProvider>,
   document.getElementById("root")
 );
 

@@ -90,13 +90,12 @@ export class GatewayController {
   //   return res.status(HttpStatus.OK).json(gateways);
   // }
 
-  // @ApiOperation({ summary: 'Create gateway' })
-  // @ApiResponse({
-  //   status: 200,
-  //   description: 'Gateway created',
-  //   type: Gateway,
-  // })
-
+  @ApiOperation({ summary: 'Create gateway' })
+  @ApiResponse({
+    status: 200,
+    description: 'Gateway created',
+    type: Gateway,
+  })
   @Post()
   public async create(
     @Response() res,

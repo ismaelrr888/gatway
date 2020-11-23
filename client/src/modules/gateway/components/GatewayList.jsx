@@ -10,14 +10,19 @@ import {
   Drawer,
   Grid,
   IconButton,
+  TextField,
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import CloseIcon from "@material-ui/icons/Close";
 
 import Title from "commons/Title/Title";
 import Progress from "commons/Progress/Progress";
+import CustomButton from "commons/CustomButton/CustomButton";
+import { useSnackbar } from "notistack";
+import { useFormik } from "formik";
+import { createGatewaySchema } from "modules/gateway/validations/ValidateGateway";
 
-import { getGateways, deleteGateway } from "services/gateway";
+import { getGateways, addGateway, deleteGateway } from "services/gateway";
 
 const useStyles = makeStyles((theme) => ({
   fab: {
@@ -26,13 +31,20 @@ const useStyles = makeStyles((theme) => ({
     right: theme.spacing(2),
   },
   drawer: {
-    width: 280,
+    width: 290,
     padding: 10,
+  },
+  formStyles: {
+    "& > *": {
+      marginBottom: theme.spacing(1.2),
+    },
   },
 }));
 
 export default function GatewayList() {
   const classes = useStyles();
+
+  const { enqueueSnackbar } = useSnackbar();
 
   const [open, setOpen] = useState(false);
 
@@ -58,7 +70,6 @@ export default function GatewayList() {
     setLoading(true);
     getGateways(params)
       .then((resp) => {
-        console.log(resp.data);
         setLoading(false);
         setGatewaysData(resp.data);
       })
@@ -70,6 +81,38 @@ export default function GatewayList() {
   useEffect(() => {
     onGetGateways();
   }, [onGetGateways]);
+
+  const [loadingAdd, setLoadingAdd] = useState(false);
+  const formik = useFormik({
+    initialValues: {
+      serial: "",
+      name: "",
+      address: "",
+    },
+    onSubmit: (values, { resetForm, setErrors }) => {
+      setLoadingAdd(true);
+      addGateway(values)
+        .then(() => {
+          enqueueSnackbar("Gateway wass created successfully", {
+            variant: "success",
+          });
+          setLoadingAdd(false);
+          resetForm();
+          setOpen(false);
+          onGetGateways();
+        })
+        .catch((error) => {
+          if (+error?.response?.status === 400) {
+            setErrors({ serial: error?.response?.data?.error });
+          }
+          enqueueSnackbar("Some thing went wrong", {
+            variant: "error",
+          });
+          setLoadingAdd(false);
+        });
+    },
+    validationSchema: createGatewaySchema,
+  });
 
   return (
     <>
@@ -111,6 +154,62 @@ export default function GatewayList() {
               <CloseIcon />
             </IconButton>
           </Grid>
+          <form
+            onSubmit={formik.handleSubmit}
+            noValidate
+            className={classes.formStyles}
+          >
+            <TextField
+              label="Serial*"
+              name="serial"
+              variant="filled"
+              fullWidth
+              value={formik.values.serial || ""}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={!!(formik.touched.serial && formik.errors.serial)}
+              helperText={
+                formik.touched.serial && formik.errors.serial
+                  ? formik.errors.serial
+                  : "Enter serial number"
+              }
+            />
+            <TextField
+              label="Name*"
+              name="name"
+              variant="filled"
+              fullWidth
+              value={formik.values.name || ""}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={!!(formik.touched.name && formik.errors.name)}
+              helperText={
+                formik.touched.name && formik.errors.name
+                  ? formik.errors.name
+                  : "Enter name"
+              }
+            />
+            <TextField
+              label="IPv4 Address*"
+              name="address"
+              variant="filled"
+              fullWidth
+              value={formik.values.address || ""}
+              onChange={formik.handleChange}
+              onBlur={formik.handleBlur}
+              error={!!(formik.touched.address && formik.errors.address)}
+              helperText={
+                formik.touched.address && formik.errors.address
+                  ? formik.errors.address
+                  : "Enter IPv4 address Eg. 192.168.2.1"
+              }
+            />
+            <Grid container justify="flex-end">
+              <CustomButton color="primary" loading={loadingAdd} type="submit">
+                Create
+              </CustomButton>
+            </Grid>
+          </form>
         </div>
       </Drawer>
     </>
