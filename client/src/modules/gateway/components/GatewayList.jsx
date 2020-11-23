@@ -25,6 +25,7 @@ import { createGatewaySchema } from "modules/gateway/validations/ValidateGateway
 
 import { getGateways, addGateway } from "services/gateway";
 import DeleteGateway from "./DeleteGateway";
+import EditGateway from "./EditGateway";
 
 const useStyles = makeStyles((theme) => ({
   fab: {
@@ -156,7 +157,7 @@ export default function GatewayList() {
             <TableCell>Serial Number</TableCell>
             <TableCell>Name</TableCell>
             <TableCell>Address</TableCell>
-            <TableCell>Actions</TableCell>
+            <TableCell align="right">Actions</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -165,8 +166,17 @@ export default function GatewayList() {
               <TableCell>{row.serial}</TableCell>
               <TableCell>{row.name}</TableCell>
               <TableCell>{row.address}</TableCell>
-              <TableCell>
-                <DeleteGateway gateway={row} onGetGateways={onGetGateways} />
+              <TableCell align="right">
+                <EditGateway
+                  gateway={row}
+                  onGetGateways={onGetGateways}
+                  firstRender={firstRender}
+                />
+                <DeleteGateway
+                  gateway={row}
+                  onGetGateways={onGetGateways}
+                  firstRender={firstRender}
+                />
               </TableCell>
             </TableRow>
           ))}

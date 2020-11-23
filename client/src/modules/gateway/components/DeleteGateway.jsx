@@ -15,7 +15,7 @@ import UnelevatedButton from "commons/CustomButton/UnelevatedButton";
 import { useSnackbar } from "notistack";
 import { deleteGateway } from "services/gateway";
 
-export default function DeleteGateway({ gateway, onGetGateways }) {
+export default function DeleteGateway({ gateway, onGetGateways, firstRender }) {
   const { enqueueSnackbar } = useSnackbar();
   const [open, setOpen] = useState(false);
 
@@ -40,6 +40,7 @@ export default function DeleteGateway({ gateway, onGetGateways }) {
         );
         setLoading(false);
         setOpen(false);
+        firstRender.current = true;
         onGetGateways();
       })
       .catch((error) => {
