@@ -24,7 +24,7 @@ import {
 } from '@nestjs/swagger';
 
 @ApiTags('Gateways')
-@Controller('gateway')
+@Controller('gateways')
 export class GatewayController {
   constructor(private readonly gatewayService: GatewayService) {}
 
@@ -59,43 +59,44 @@ export class GatewayController {
     return res.status(HttpStatus.OK).json(gateways);
   }
 
-  @ApiOperation({ summary: 'Find gateway by query' })
-  @ApiResponse({
-    status: 200,
-    description: 'The found gateway',
-    type: Gateway,
-  })
-  @ApiNotFoundResponse({
-    description: 'Gateway not found',
-  })
-  @Get('find')
-  public async findTodo(@Response() res, @Body() body) {
-    const queryCondition = body;
-    const gateways = await this.gatewayService.findOne(queryCondition);
-    return res.status(HttpStatus.OK).json(gateways);
-  }
+  // @ApiOperation({ summary: 'Find gateway by query' })
+  // @ApiResponse({
+  //   status: 200,
+  //   description: 'The found gateway',
+  //   type: Gateway,
+  // })
+  // @ApiNotFoundResponse({
+  //   description: 'Gateway not found',
+  // })
+  // @Get('find')
+  // public async findTodo(@Response() res, @Body() body) {
+  //   const queryCondition = body;
+  //   const gateways = await this.gatewayService.findOne(queryCondition);
+  //   return res.status(HttpStatus.OK).json(gateways);
+  // }
 
-  @ApiOperation({ summary: 'Find gateway by id' })
-  @ApiResponse({
-    status: 200,
-    description: 'The found gateway',
-    type: Gateway,
-  })
-  @ApiNotFoundResponse({
-    description: 'Gateway not found',
-  })
-  @Get('/:id')
-  public async getTodo(@Response() res, @Param() param) {
-    const gateways = await this.gatewayService.findById(param.id);
-    return res.status(HttpStatus.OK).json(gateways);
-  }
+  // @ApiOperation({ summary: 'Find gateway by id' })
+  // @ApiResponse({
+  //   status: 200,
+  //   description: 'The found gateway',
+  //   type: Gateway,
+  // })
+  // @ApiNotFoundResponse({
+  //   description: 'Gateway not found',
+  // })
+  // @Get('/:id')
+  // public async getTodo(@Response() res, @Param() param) {
+  //   const gateways = await this.gatewayService.findById(param.id);
+  //   return res.status(HttpStatus.OK).json(gateways);
+  // }
 
-  @ApiOperation({ summary: 'Create gateway' })
-  @ApiResponse({
-    status: 200,
-    description: 'Gateway created',
-    type: Gateway,
-  })
+  // @ApiOperation({ summary: 'Create gateway' })
+  // @ApiResponse({
+  //   status: 200,
+  //   description: 'Gateway created',
+  //   type: Gateway,
+  // })
+
   @Post()
   public async create(
     @Response() res,

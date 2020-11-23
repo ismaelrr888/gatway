@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Table,
@@ -13,7 +13,11 @@ import {
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import CloseIcon from "@material-ui/icons/Close";
+
 import Title from "commons/Title/Title";
+import Progress from "commons/Progress/Progress";
+
+import { getGateways, deleteGateway } from "services/gateway";
 
 const useStyles = makeStyles((theme) => ({
   fab: {
@@ -42,8 +46,34 @@ export default function GatewayList() {
     setOpen(open);
   };
 
+  const [params, setParams] = useState({
+    search: "",
+    page: 1,
+    limit: 10,
+  });
+  const [loading, setLoading] = useState(false);
+  const [gatewaysData, setGatewaysData] = useState({});
+
+  const onGetGateways = useCallback(() => {
+    setLoading(true);
+    getGateways(params)
+      .then((resp) => {
+        console.log(resp.data);
+        setLoading(false);
+        setGatewaysData(resp.data);
+      })
+      .catch((error) => {
+        setLoading(false);
+      });
+  }, [params]);
+
+  useEffect(() => {
+    onGetGateways();
+  }, [onGetGateways]);
+
   return (
     <>
+      <Progress loading={loading} />
       <Title>Gateway List</Title>
       <Table size="small">
         <TableHead>
@@ -55,15 +85,14 @@ export default function GatewayList() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {/* {rows.map((row) => (
-                <TableRow key={row.id}>
-                  <TableCell>{row.date}</TableCell>
-                  <TableCell>{row.name}</TableCell>
-                  <TableCell>{row.shipTo}</TableCell>
-                  <TableCell>{row.paymentMethod}</TableCell>
-                  <TableCell align="right">{row.amount}</TableCell>
-                </TableRow>
-              ))} */}
+          {gatewaysData?.results?.map((row, index) => (
+            <TableRow key={index}>
+              <TableCell>{row.serial}</TableCell>
+              <TableCell>{row.name}</TableCell>
+              <TableCell>{row.address}</TableCell>
+              <TableCell></TableCell>
+            </TableRow>
+          ))}
         </TableBody>
       </Table>
       <Fab

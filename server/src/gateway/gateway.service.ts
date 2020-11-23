@@ -11,8 +11,8 @@ export class GatewayService {
   ) {}
 
   async findAll(query) {
-    const { page = 1, limit = 10 } = query;
-    const where = {};
+    const { page = 1, limit = 10, search } = query;
+    const where = search ? { name: search } : {};
     const skip = (+page - 1) * +limit;
     const sort = { createdAt: 'desc' };
 
@@ -48,9 +48,11 @@ export class GatewayService {
     const total = await this.gatewayModel.countDocuments();
 
     return {
-      items,
-      hasPreviousPage: skip > 0 && items.length > 0 ? true : false,
-      hasNextPage: +limit + skip < total ? true : false,
+      results: items,
+      links: {
+        previous: skip > 0 && items.length > 0 ? true : false,
+        next: +limit + skip < total ? true : false,
+      },
       total,
     };
   }

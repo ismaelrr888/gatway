@@ -1,6 +1,11 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { ListItem, ListItemIcon, ListItemText } from "@material-ui/core";
+import {
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  Tooltip,
+} from "@material-ui/core";
 import { NavLink } from "react-router-dom";
 import DevicesIcon from "@material-ui/icons/Devices";
 import SettingsRemoteIcon from "@material-ui/icons/SettingsRemote";
@@ -32,16 +37,21 @@ export default function ListItems() {
   return (
     <>
       {menu.map((item, index) => (
-        <ListItem
-          button
-          key={index}
-          component={NavLink}
-          to={item.path}
-          activeClassName={classes.selected}
+        <Tooltip
+          key={`${index}:${item.name}:${item.path}`}
+          title={item.name}
+          placement={"right"}
         >
-          <ListItemIcon>{item.icon}</ListItemIcon>
-          <ListItemText primary={item.name} />
-        </ListItem>
+          <ListItem
+            button
+            component={NavLink}
+            to={item.path}
+            activeClassName={classes.selected}
+          >
+            <ListItemIcon>{item.icon}</ListItemIcon>
+            <ListItemText primary={item.name} />
+          </ListItem>
+        </Tooltip>
       ))}
     </>
   );

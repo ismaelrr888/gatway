@@ -3,7 +3,6 @@ import { NestFactory } from '@nestjs/core';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 import { HttpExceptionFilter } from './common/filters/http-exception.filter';
-// import { ErrorsInterceptor } from './common/interceptors/exception.interceptor';
 import { RedocOptions, RedocModule } from 'nestjs-redoc';
 
 async function bootstrap() {
