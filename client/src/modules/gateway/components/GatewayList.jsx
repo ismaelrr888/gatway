@@ -23,6 +23,7 @@ import { useFormik } from "formik";
 import { createGatewaySchema } from "modules/gateway/validations/ValidateGateway";
 
 import { getGateways, addGateway, deleteGateway } from "services/gateway";
+import DeleteGateway from "./DeleteGateway";
 
 const useStyles = makeStyles((theme) => ({
   fab: {
@@ -133,7 +134,9 @@ export default function GatewayList() {
               <TableCell>{row.serial}</TableCell>
               <TableCell>{row.name}</TableCell>
               <TableCell>{row.address}</TableCell>
-              <TableCell></TableCell>
+              <TableCell>
+                <DeleteGateway gateway={row} onGetGateways={onGetGateways} />
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
