@@ -106,6 +106,7 @@ export default function GatewayList() {
           setLoadingAdd(false);
           resetForm();
           setOpen(false);
+          firstRender.current = true;
           onGetGateways();
         })
         .catch((error) => {
