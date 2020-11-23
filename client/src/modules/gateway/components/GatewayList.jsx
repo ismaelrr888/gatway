@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Table,
@@ -11,6 +11,7 @@ import {
   Grid,
   IconButton,
   TextField,
+  TablePagination,
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import CloseIcon from "@material-ui/icons/Close";
@@ -22,7 +23,7 @@ import { useSnackbar } from "notistack";
 import { useFormik } from "formik";
 import { createGatewaySchema } from "modules/gateway/validations/ValidateGateway";
 
-import { getGateways, addGateway, deleteGateway } from "services/gateway";
+import { getGateways, addGateway } from "services/gateway";
 import DeleteGateway from "./DeleteGateway";
 
 const useStyles = makeStyles((theme) => ({
@@ -62,21 +63,26 @@ export default function GatewayList() {
   const [params, setParams] = useState({
     search: "",
     page: 1,
-    limit: 10,
+    limit: 5,
   });
   const [loading, setLoading] = useState(false);
   const [gatewaysData, setGatewaysData] = useState({});
 
+  const firstRender = useRef(true);
+
   const onGetGateways = useCallback(() => {
-    setLoading(true);
-    getGateways(params)
-      .then((resp) => {
-        setLoading(false);
-        setGatewaysData(resp.data);
-      })
-      .catch((error) => {
-        setLoading(false);
-      });
+    if (firstRender.current) {
+      setLoading(true);
+      getGateways(params)
+        .then((resp) => {
+          setLoading(false);
+          setGatewaysData(resp.data);
+          firstRender.current = false;
+        })
+        .catch(() => {
+          setLoading(false);
+        });
+    }
   }, [params]);
 
   useEffect(() => {
@@ -94,7 +100,7 @@ export default function GatewayList() {
       setLoadingAdd(true);
       addGateway(values)
         .then(() => {
-          enqueueSnackbar("Gateway wass created successfully", {
+          enqueueSnackbar("Gateway was created successfully", {
             variant: "success",
           });
           setLoadingAdd(false);
@@ -115,10 +121,34 @@ export default function GatewayList() {
     validationSchema: createGatewaySchema,
   });
 
+  const handlePageChange = (event, newPage) => {
+    setParams((oldParams) => ({ ...oldParams, page: newPage + 1 }));
+    params.page = newPage + 1;
+    firstRender.current = true;
+    onGetGateways();
+  };
+
+  const timeoutId = useRef();
+
+  const handleSearch = (event) => {
+    event.persist();
+    clearTimeout(timeoutId.current);
+    setParams((oldParams) => ({ ...oldParams, search: event.target.value }));
+    params.search = event.target.value;
+    timeoutId.current = setTimeout(() => {
+      firstRender.current = true;
+      onGetGateways();
+    }, 1000);
+  };
+
   return (
     <>
       <Progress loading={loading} />
       <Title>Gateway List</Title>
+      <Grid container justify="flex-end">
+        <TextField label="Search" variant="filled" onChange={handleSearch} />
+      </Grid>
+
       <Table size="small">
         <TableHead>
           <TableRow>
@@ -141,6 +171,15 @@ export default function GatewayList() {
           ))}
         </TableBody>
       </Table>
+      <TablePagination
+        labelRowsPerPage={""}
+        component={"div"}
+        rowsPerPageOptions={[5]}
+        page={gatewaysData?.total === 0 ? 0 : params.page - 1}
+        count={gatewaysData?.total || 0}
+        rowsPerPage={5}
+        onChangePage={handlePageChange}
+      />
       <Fab
         aria-label="add gateway"
         className={classes.fab}

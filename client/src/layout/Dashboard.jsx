@@ -3,18 +3,15 @@ import clsx from "clsx";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Container,
-  Grid,
   CssBaseline,
   Switch,
   Drawer,
-  Box,
   AppBar,
   Toolbar,
   List,
   Typography,
   Divider,
   IconButton,
-  Paper,
 } from "@material-ui/core";
 import MenuIcon from "@material-ui/icons/Menu";
 import ChevronLeftIcon from "@material-ui/icons/ChevronLeft";
@@ -29,9 +26,7 @@ import {
   BrowserRouter as Router,
   Route,
   Switch as SwitchDom,
-  Link,
   Redirect,
-  useLocation,
 } from "react-router-dom";
 import ThemeIndicator from "./themeSwitch";
 
@@ -39,7 +34,6 @@ import GatewayContainer from "modules/gateway/containers/GatewayContainer";
 
 // For Switch Theming
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
-import { dark } from "@material-ui/core/styles/createPalette";
 
 const drawerWidth = 240;
 

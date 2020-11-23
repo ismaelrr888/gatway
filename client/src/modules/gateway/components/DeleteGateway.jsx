@@ -33,7 +33,7 @@ export default function DeleteGateway({ gateway, onGetGateways }) {
     deleteGateway(gateway._id)
       .then(() => {
         enqueueSnackbar(
-          `Gateway with name: ${gateway.name} and Ipv4: ${gateway.address} wass deleted successfully`,
+          `Gateway with name: ${gateway.name} and Ipv4: ${gateway.address} was deleted successfully`,
           {
             variant: "success",
           }

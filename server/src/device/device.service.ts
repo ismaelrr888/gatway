@@ -110,7 +110,7 @@ export class DeviceService {
       throw new HttpException(
         {
           status: HttpStatus.OK,
-          error: 'They are not allowed more than 10 devices per gateway',
+          error: `Gateway can't exeded 10 devices`,
         },
         HttpStatus.OK,
       );

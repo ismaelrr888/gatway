@@ -5,15 +5,19 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 
 import { SnackbarProvider } from "notistack";
+import WarningIcon from "@material-ui/icons/Warning";
+import InfoIcon from "@material-ui/icons/Info";
+import DoneIcon from "@material-ui/icons/Done";
+import HighlightOffIcon from "@material-ui/icons/HighlightOff";
 
 ReactDOM.render(
   <SnackbarProvider
     maxSnack={3}
     iconVariant={{
-      success: "✅",
-      error: "✖️",
-      warning: "⚠️",
-      info: "ℹ️",
+      success: <DoneIcon />,
+      error: <HighlightOffIcon />,
+      warning: <WarningIcon />,
+      info: <InfoIcon />,
     }}
   >
     <App />

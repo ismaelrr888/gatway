@@ -12,9 +12,13 @@ export class GatewayService {
 
   async findAll(query) {
     const { page = 1, limit = 10, search } = query;
-    const where = search ? { name: search } : {};
+    const where = {};
     const skip = (+page - 1) * +limit;
     const sort = { createdAt: 'desc' };
+
+    if (search) {
+      where['name'] = { $regex: '.*' + search.toLowerCase() + '.*' };
+    }
 
     if (page < 1) {
       throw new HttpException(
@@ -37,8 +41,7 @@ export class GatewayService {
     }
 
     const items = await this.gatewayModel
-      .find()
-      .where(where)
+      .find(where)
       .skip(skip)
       .limit(+limit)
       .sort(sort)
