@@ -59,21 +59,21 @@ export class GatewayController {
     return res.status(HttpStatus.OK).json(gateways);
   }
 
-  // @ApiOperation({ summary: 'Find gateway by query' })
-  // @ApiResponse({
-  //   status: 200,
-  //   description: 'The found gateway',
-  //   type: Gateway,
-  // })
-  // @ApiNotFoundResponse({
-  //   description: 'Gateway not found',
-  // })
-  // @Get('find')
-  // public async findTodo(@Response() res, @Body() body) {
-  //   const queryCondition = body;
-  //   const gateways = await this.gatewayService.findOne(queryCondition);
-  //   return res.status(HttpStatus.OK).json(gateways);
-  // }
+  @ApiOperation({ summary: 'Find gateway by query' })
+  @ApiResponse({
+    status: 200,
+    description: 'The found gateway',
+    type: Gateway,
+  })
+  @ApiNotFoundResponse({
+    description: 'Gateway not found',
+  })
+  @Get('find')
+  public async findTodo(@Response() res, @Body() body) {
+    const queryCondition = body;
+    const gateways = await this.gatewayService.findOne(queryCondition);
+    return res.status(HttpStatus.OK).json(gateways);
+  }
 
   @ApiOperation({ summary: 'Find gateway by id' })
   @ApiResponse({
