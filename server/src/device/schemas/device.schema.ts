@@ -5,7 +5,7 @@ import { DeviceStatus } from '../enum/device.enum';
 @Schema()
 export class Device extends Document {
   @Prop({ required: true, unique: true })
-  uid: string;
+  uid: number;
 
   @Prop({ required: true })
   vendor: string;

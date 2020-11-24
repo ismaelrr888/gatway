@@ -9,9 +9,13 @@ import {
   IconButton,
   TextField,
   MenuItem,
-  InputAdornment,
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableRow,
 } from "@material-ui/core";
-import KeyboardIcon from "@material-ui/icons/Keyboard";
+import { green, grey } from "@material-ui/core/colors";
 import AddIcon from "@material-ui/icons/Add";
 import CloseIcon from "@material-ui/icons/Close";
 import { useParams } from "react-router-dom";
@@ -24,7 +28,6 @@ import { getGatewayById } from "services/gateway";
 import { addDevice, getDevice } from "services/device";
 import { useFormik } from "formik";
 import { createDeviceSchema } from "modules/gateway/validations/ValidateDevice";
-import { create_UUID } from "utils/utils";
 
 const useStyles = makeStyles((theme) => ({
   fab: {
@@ -77,6 +80,39 @@ export default function GatewayDetails() {
       });
   }, [enqueueSnackbar, params]);
 
+  const [devices, setDevices] = useState({});
+  const [loadingD, setLoadingD] = useState(false);
+
+  useEffect(() => {
+    setLoadingD(true);
+    getDevice({ idGateway: params.id })
+      .then((resp) => {
+        setLoadingD(false);
+        setDevices(resp.data);
+      })
+      .catch(() => {
+        setLoadingD(false);
+        enqueueSnackbar("Some thing went wrong", {
+          variant: "error",
+        });
+      });
+  }, [enqueueSnackbar, params.id]);
+
+  const onGetDevice = () => {
+    setLoadingD(true);
+    getDevice({ idGateway: params.id })
+      .then((resp) => {
+        setLoadingD(false);
+        setDevices(resp.data);
+      })
+      .catch(() => {
+        setLoadingD(false);
+        enqueueSnackbar("Some thing went wrong", {
+          variant: "error",
+        });
+      });
+  };
+
   const [loadingAdd, setLoadingAdd] = useState(false);
   const formik = useFormik({
     initialValues: {
@@ -86,33 +122,70 @@ export default function GatewayDetails() {
       status: "",
     },
     onSubmit: (values, { resetForm, setErrors }) => {
-      setLoadingAdd(true);
-      addDevice(values)
-        .then(() => {
-          enqueueSnackbar("Device was created successfully", {
-            variant: "success",
-          });
-          setLoadingAdd(false);
-          resetForm();
-          setOpen(false);
-          // firstRender.current = true;
-          // onGetGateways();
-        })
-        .catch((error) => {
-          // if (+error?.response?.status === 400) {
-          //   setErrors({ serial: error?.response?.data?.error });
-          // }
-          enqueueSnackbar("Some thing went wrong", {
-            variant: "error",
-          });
-          setLoadingAdd(false);
+      if (devices?.results?.length > 9) {
+        enqueueSnackbar(`Gateway can't exeded 10 devices`, {
+          variant: "error",
         });
+      } else {
+        setLoadingAdd(true);
+        addDevice(values)
+          .then(() => {
+            onGetDevice();
+            enqueueSnackbar("Device was created successfully", {
+              variant: "success",
+            });
+            setLoadingAdd(false);
+            resetForm();
+            setOpen(false);
+          })
+          .catch((error) => {
+            setLoadingAdd(false);
+            if (+error?.response?.status === 400) {
+              setErrors({ uid: error?.response?.data?.error });
+            }
+            enqueueSnackbar("Some thing went wrong", {
+              variant: "error",
+            });
+          });
+      }
     },
     validationSchema: createDeviceSchema,
   });
 
-  const generateUID = () => {
-    formik.setFieldValue("uid", create_UUID(), true);
+  const mapStatus = (status) => {
+    let content;
+    if (status === "Online") {
+      content = (
+        <Typography
+          align="center"
+          style={{
+            color: "white",
+            fontSize: 12,
+            backgroundColor: green[500],
+            borderRadius: "4px",
+            padding: "8px 0 8px 0",
+          }}
+        >
+          <b>{status}</b>
+        </Typography>
+      );
+    } else if (status === "Offline") {
+      content = (
+        <Typography
+          align="center"
+          style={{
+            color: "white",
+            fontSize: 12,
+            backgroundColor: grey[500],
+            borderRadius: "4px",
+            padding: "8px 0 8px 0",
+          }}
+        >
+          <b>{status}</b>
+        </Typography>
+      );
+    }
+    return content;
   };
 
   return (
@@ -137,7 +210,46 @@ export default function GatewayDetails() {
         </Grid>
       </Grid>
       <Divider />
+      <Progress loading={loadingD} />
       <Title>Devices List</Title>
+      <Table size="small">
+        <TableHead>
+          <TableRow>
+            <TableCell>Uid</TableCell>
+            <TableCell>Vendor</TableCell>
+            <TableCell align="center">Status</TableCell>
+            <TableCell align="right">Actions</TableCell>
+          </TableRow>
+        </TableHead>
+        <TableBody>
+          {devices?.results?.map((row, index) => (
+            <TableRow key={index}>
+              <TableCell>{row.uid}</TableCell>
+              <TableCell>{row.vendor}</TableCell>
+              <TableCell>{mapStatus(row.status)}</TableCell>
+              <TableCell align="right">
+                {/* <IconButton
+                  aria-label="details"
+                  component={Link}
+                  to={`/gateways/${row._id}`}
+                >
+                  <VisibilityIcon color="primary" />
+                </IconButton>
+                <EditGateway
+                  gateway={row}
+                  onGetGateways={onGetGateways}
+                  firstRender={firstRender}
+                />
+                <DeleteGateway
+                  gateway={row}
+                  onGetGateways={onGetGateways}
+                  firstRender={firstRender}
+                /> */}
+              </TableCell>
+            </TableRow>
+          ))}
+        </TableBody>
+      </Table>
       <Fab
         aria-label="add gateway"
         className={classes.fab}
@@ -162,6 +274,7 @@ export default function GatewayDetails() {
             <TextField
               label="Uid*"
               name="uid"
+              type="number"
               variant="filled"
               fullWidth
               value={formik.values.uid || ""}
@@ -173,18 +286,6 @@ export default function GatewayDetails() {
                   ? formik.errors.uid
                   : "Enter uid number"
               }
-              InputProps={{
-                endAdornment: (
-                  <InputAdornment position={"end"}>
-                    <IconButton
-                      aria-label="toggle uid generate"
-                      onClick={generateUID}
-                    >
-                      <KeyboardIcon />
-                    </IconButton>
-                  </InputAdornment>
-                ),
-              }}
             />
             <TextField
               label="Vendor*"

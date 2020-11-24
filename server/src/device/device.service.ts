@@ -46,12 +46,14 @@ export class DeviceService {
       .sort(sort)
       .exec();
 
-    const total = await this.deviceModel.countDocuments();
+    const total = items.length;
 
     return {
-      items,
-      hasPreviousPage: skip > 0 && items.length > 0 ? true : false,
-      hasNextPage: +limit + skip < total ? true : false,
+      results: items,
+      links: {
+        previous: skip > 0 && items.length > 0 ? true : false,
+        next: +limit + skip < total ? true : false,
+      },
       total,
     };
   }
@@ -109,10 +111,10 @@ export class DeviceService {
     if (countDevices > 9) {
       throw new HttpException(
         {
-          status: HttpStatus.OK,
+          status: HttpStatus.CONFLICT,
           error: `Gateway can't exeded 10 devices`,
         },
-        HttpStatus.OK,
+        HttpStatus.CONFLICT,
       );
     }
 

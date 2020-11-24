@@ -54,7 +54,7 @@ export default function DeleteGateway({ gateway, onGetGateways, firstRender }) {
   return (
     <>
       <IconButton aria-label="delete" color="primary" onClick={handleClickOpen}>
-        <DeleteForeverIcon />
+        <DeleteForeverIcon color="primary" />
       </IconButton>
       <Dialog
         open={open}

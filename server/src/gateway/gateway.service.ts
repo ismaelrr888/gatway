@@ -48,7 +48,9 @@ export class GatewayService {
       .populate({ path: 'devices', model: 'Device' })
       .exec();
 
-    const total = await this.gatewayModel.countDocuments();
+    const total = !search
+      ? await this.gatewayModel.countDocuments()
+      : items.length;
 
     return {
       results: items,

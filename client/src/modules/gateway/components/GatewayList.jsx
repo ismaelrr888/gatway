@@ -150,7 +150,12 @@ export default function GatewayList() {
       <Progress loading={loading} />
       <Title>Gateway List</Title>
       <Grid container justify="flex-end">
-        <TextField label="Search" variant="filled" onChange={handleSearch} />
+        <TextField
+          label="Search"
+          variant="filled"
+          onChange={handleSearch}
+          size="small"
+        />
       </Grid>
 
       <Table size="small">

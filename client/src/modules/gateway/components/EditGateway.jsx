@@ -72,7 +72,7 @@ export default function EditGateway({ gateway, onGetGateways, firstRender }) {
   return (
     <>
       <IconButton aria-label="edit" color="primary" onClick={handleClickOpen}>
-        <EditIcon />
+        <EditIcon color="primary" />
       </IconButton>
       <Dialog
         open={open}

@@ -36,6 +36,12 @@ import GatewayDetailsContainer from "modules/gateway/containers/GatewayDetailsCo
 // For Switch Theming
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
 
+import { SnackbarProvider } from "notistack";
+import WarningIcon from "@material-ui/icons/Warning";
+import InfoIcon from "@material-ui/icons/Info";
+import DoneIcon from "@material-ui/icons/Done";
+import HighlightOffIcon from "@material-ui/icons/HighlightOff";
+
 const drawerWidth = 240;
 
 const useStyles = makeStyles((theme) => ({
@@ -152,83 +158,93 @@ export default function Dashboard() {
 
   return (
     <ThemeProvider theme={darkTheme}>
-      <Router>
-        <div className={classes.root}>
-          <CssBaseline />
-          <AppBar
-            position="absolute"
-            className={clsx(classes.appBar, open && classes.appBarShift)}
-          >
-            <Toolbar className={classes.toolbar}>
-              <IconButton
-                edge="start"
-                color="inherit"
-                aria-label="open drawer"
-                onClick={handleDrawerOpen}
-                className={clsx(
-                  classes.menuButton,
-                  open && classes.menuButtonHidden
-                )}
-              >
-                <MenuIcon />
-              </IconButton>
-              <Typography
-                component="h1"
-                variant="h6"
-                color="inherit"
-                noWrap
-                className={classes.title}
-              >
-                Gateways Management Console
-              </Typography>
-              <Switch checked={darkState} onChange={handleThemeChange} />
-              {ThemeIndicator(darkState)}
-            </Toolbar>
-          </AppBar>
-          <Drawer
-            variant="permanent"
-            classes={{
-              paper: clsx(
-                classes.drawerPaper,
-                !open && classes.drawerPaperClose
-              ),
-            }}
-            open={open}
-          >
-            <div className={classes.toolbarIcon}>
-              <IconButton onClick={handleDrawerClose}>
-                <ChevronLeftIcon />
-              </IconButton>
-            </div>
-            <Divider />
-            <List>
-              <ListItems />
-            </List>
-          </Drawer>
-          <main className={classes.content}>
-            <div className={classes.appBarSpacer} />
-            <Container
-              maxWidth={false}
-              disableGutters
-              className={classes.container}
+      <SnackbarProvider
+        maxSnack={3}
+        iconVariant={{
+          success: <DoneIcon />,
+          error: <HighlightOffIcon />,
+          warning: <WarningIcon />,
+          info: <InfoIcon />,
+        }}
+      >
+        <Router>
+          <div className={classes.root}>
+            <CssBaseline />
+            <AppBar
+              position="absolute"
+              className={clsx(classes.appBar, open && classes.appBarShift)}
             >
-              <SwitchDom>
-                <Route
-                  exact
-                  path="/"
-                  component={() => <Redirect to="/gateways" />}
-                />
-                <Route path="/gateways" exact component={GatewayContainer} />
-                <Route
-                  path="/gateways/:id"
-                  exact
-                  component={GatewayDetailsContainer}
-                />
-              </SwitchDom>
-            </Container>
-          </main>
-        </div>
-      </Router>
+              <Toolbar className={classes.toolbar}>
+                <IconButton
+                  edge="start"
+                  color="inherit"
+                  aria-label="open drawer"
+                  onClick={handleDrawerOpen}
+                  className={clsx(
+                    classes.menuButton,
+                    open && classes.menuButtonHidden
+                  )}
+                >
+                  <MenuIcon />
+                </IconButton>
+                <Typography
+                  component="h1"
+                  variant="h6"
+                  color="inherit"
+                  noWrap
+                  className={classes.title}
+                >
+                  Gateways Management Console
+                </Typography>
+                <Switch checked={darkState} onChange={handleThemeChange} />
+                {ThemeIndicator(darkState)}
+              </Toolbar>
+            </AppBar>
+            <Drawer
+              variant="permanent"
+              classes={{
+                paper: clsx(
+                  classes.drawerPaper,
+                  !open && classes.drawerPaperClose
+                ),
+              }}
+              open={open}
+            >
+              <div className={classes.toolbarIcon}>
+                <IconButton onClick={handleDrawerClose}>
+                  <ChevronLeftIcon />
+                </IconButton>
+              </div>
+              <Divider />
+              <List>
+                <ListItems />
+              </List>
+            </Drawer>
+            <main className={classes.content}>
+              <div className={classes.appBarSpacer} />
+              <Container
+                maxWidth={false}
+                disableGutters
+                className={classes.container}
+              >
+                <SwitchDom>
+                  <Route
+                    exact
+                    path="/"
+                    component={() => <Redirect to="/gateways" />}
+                  />
+                  <Route path="/gateways" exact component={GatewayContainer} />
+                  <Route
+                    path="/gateways/:id"
+                    exact
+                    component={GatewayDetailsContainer}
+                  />
+                </SwitchDom>
+              </Container>
+            </main>
+          </div>
+        </Router>
+      </SnackbarProvider>
     </ThemeProvider>
   );
 }
