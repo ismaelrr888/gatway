@@ -18,7 +18,7 @@ import {
 import { green, grey } from "@material-ui/core/colors";
 import AddIcon from "@material-ui/icons/Add";
 import CloseIcon from "@material-ui/icons/Close";
-import { useParams } from "react-router-dom";
+import { useParams, useHistory } from "react-router-dom";
 import { useSnackbar } from "notistack";
 
 import Title from "commons/Title/Title";
@@ -29,6 +29,7 @@ import { addDevice, getDevice } from "services/device";
 import { useFormik } from "formik";
 import { createDeviceSchema } from "modules/gateway/validations/ValidateDevice";
 import DeleteDevice from "modules/gateway/components/DeleteDevice";
+import UnelevatedButton from "commons/CustomButton/UnelevatedButton";
 
 const useStyles = makeStyles((theme) => ({
   fab: {
@@ -51,6 +52,7 @@ export default function GatewayDetails() {
   const classes = useStyles();
   const { enqueueSnackbar } = useSnackbar();
   const params = useParams();
+  const history = useHistory();
 
   const [open, setOpen] = useState(false);
 
@@ -189,6 +191,10 @@ export default function GatewayDetails() {
     return content;
   };
 
+  const onBackToGateways = () => {
+    history.push("/gateways");
+  };
+
   return (
     <>
       <Progress loading={loadingGateway} />
@@ -235,6 +241,9 @@ export default function GatewayDetails() {
           ))}
         </TableBody>
       </Table>
+      <UnelevatedButton color="primary" onClick={onBackToGateways}>
+        Back to gateways
+      </UnelevatedButton>
       <Fab
         aria-label="add gateway"
         className={classes.fab}
