@@ -7,7 +7,6 @@ import {
   Tooltip,
 } from "@material-ui/core";
 import { NavLink } from "react-router-dom";
-import DevicesIcon from "@material-ui/icons/Devices";
 import SettingsRemoteIcon from "@material-ui/icons/SettingsRemote";
 
 const menu = [
@@ -16,12 +15,6 @@ const menu = [
     id: "gateways",
     icon: <SettingsRemoteIcon />,
     path: "/gateways",
-  },
-  {
-    name: "Devices",
-    id: "devices",
-    icon: <DevicesIcon />,
-    path: "/devices",
   },
 ];
 

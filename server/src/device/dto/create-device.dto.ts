@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEnum, IsNotEmpty, IsString } from 'class-validator';
+import { IsEnum, IsNotEmpty, IsString, IsUUID } from 'class-validator';
 import { DeviceStatus } from '../enum/device.enum';
 
 export class CreateDeviceDto {
@@ -17,7 +17,8 @@ export class CreateDeviceDto {
     description: 'Device uid',
   })
   @IsNotEmpty()
-  readonly uid: number;
+  @IsUUID()
+  readonly uid: string;
 
   @ApiProperty({
     required: true,

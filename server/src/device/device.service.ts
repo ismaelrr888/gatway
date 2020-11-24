@@ -13,8 +13,8 @@ export class DeviceService {
   ) {}
 
   async findAll(query) {
-    const { page = 1, limit = 10 } = query;
-    const where = {};
+    const { page = 1, limit = 10, idGateway } = query;
+    const where = { idGateway: idGateway };
     const skip = (+page - 1) * +limit;
     const sort = { name: 'desc' } || undefined;
 
@@ -96,10 +96,10 @@ export class DeviceService {
     if (device) {
       throw new HttpException(
         {
-          status: HttpStatus.OK,
+          status: HttpStatus.BAD_REQUEST,
           error: 'UID must be unique',
         },
-        HttpStatus.OK,
+        HttpStatus.BAD_REQUEST,
       );
     }
 
@@ -116,7 +116,7 @@ export class DeviceService {
       );
     }
 
-    const createdDevice = new this.deviceModel(rest);
+    const createdDevice = new this.deviceModel(createDeviceDto);
     const resultDevice = await createdDevice.save();
 
     await this.gatewayModel.findOneAndUpdate(

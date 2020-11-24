@@ -24,8 +24,8 @@ import { DeviceService } from './device.service';
 import { CreateDeviceDto } from './dto/create-device.dto';
 import { Device } from './schemas/device.schema';
 
-@ApiTags('Device')
-@Controller('device')
+@ApiTags('Devices')
+@Controller('devices')
 export class DeviceController {
   constructor(private readonly deviceService: DeviceService) {}
 
@@ -54,7 +54,7 @@ export class DeviceController {
     description:
       'The page must be greater than 0 or The limit must be greater than 0',
   })
-  @Get('findAll')
+  @Get()
   public async findAll(@Query() query, @Response() res): Promise<Device[]> {
     const gateways = await this.deviceService.findAll(query);
     return res.status(HttpStatus.OK).json(gateways);

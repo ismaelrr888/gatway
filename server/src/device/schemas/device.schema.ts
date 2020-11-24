@@ -5,13 +5,16 @@ import { DeviceStatus } from '../enum/device.enum';
 @Schema()
 export class Device extends Document {
   @Prop({ required: true, unique: true })
-  uid: number;
+  uid: string;
 
   @Prop({ required: true })
   vendor: string;
 
   @Prop({ required: true })
   status: DeviceStatus;
+
+  @Prop({ required: true })
+  idGateway: string;
 }
 
 export const DeviceSchema = SchemaFactory.createForClass(Device);

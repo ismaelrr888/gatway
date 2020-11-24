@@ -15,6 +15,7 @@ import {
 } from "@material-ui/core";
 import AddIcon from "@material-ui/icons/Add";
 import CloseIcon from "@material-ui/icons/Close";
+import VisibilityIcon from "@material-ui/icons/Visibility";
 
 import Title from "commons/Title/Title";
 import Progress from "commons/Progress/Progress";
@@ -26,6 +27,7 @@ import { createGatewaySchema } from "modules/gateway/validations/ValidateGateway
 import { getGateways, addGateway } from "services/gateway";
 import DeleteGateway from "./DeleteGateway";
 import EditGateway from "./EditGateway";
+import { Link } from "react-router-dom";
 
 const useStyles = makeStyles((theme) => ({
   fab: {
@@ -167,6 +169,13 @@ export default function GatewayList() {
               <TableCell>{row.name}</TableCell>
               <TableCell>{row.address}</TableCell>
               <TableCell align="right">
+                <IconButton
+                  aria-label="details"
+                  component={Link}
+                  to={`/gateways/${row._id}`}
+                >
+                  <VisibilityIcon color="primary" />
+                </IconButton>
                 <EditGateway
                   gateway={row}
                   onGetGateways={onGetGateways}

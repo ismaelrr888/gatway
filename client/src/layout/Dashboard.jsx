@@ -31,6 +31,7 @@ import {
 import ThemeIndicator from "./themeSwitch";
 
 import GatewayContainer from "modules/gateway/containers/GatewayContainer";
+import GatewayDetailsContainer from "modules/gateway/containers/GatewayDetailsContainer";
 
 // For Switch Theming
 import { createMuiTheme, ThemeProvider } from "@material-ui/core/styles";
@@ -218,6 +219,11 @@ export default function Dashboard() {
                   component={() => <Redirect to="/gateways" />}
                 />
                 <Route path="/gateways" exact component={GatewayContainer} />
+                <Route
+                  path="/gateways/:id"
+                  exact
+                  component={GatewayDetailsContainer}
+                />
               </SwitchDom>
             </Container>
           </main>
