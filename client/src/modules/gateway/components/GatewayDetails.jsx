@@ -28,6 +28,7 @@ import { getGatewayById } from "services/gateway";
 import { addDevice, getDevice } from "services/device";
 import { useFormik } from "formik";
 import { createDeviceSchema } from "modules/gateway/validations/ValidateDevice";
+import DeleteDevice from "modules/gateway/components/DeleteDevice";
 
 const useStyles = makeStyles((theme) => ({
   fab: {
@@ -228,23 +229,7 @@ export default function GatewayDetails() {
               <TableCell>{row.vendor}</TableCell>
               <TableCell>{mapStatus(row.status)}</TableCell>
               <TableCell align="right">
-                {/* <IconButton
-                  aria-label="details"
-                  component={Link}
-                  to={`/gateways/${row._id}`}
-                >
-                  <VisibilityIcon color="primary" />
-                </IconButton>
-                <EditGateway
-                  gateway={row}
-                  onGetGateways={onGetGateways}
-                  firstRender={firstRender}
-                />
-                <DeleteGateway
-                  gateway={row}
-                  onGetGateways={onGetGateways}
-                  firstRender={firstRender}
-                /> */}
+                <DeleteDevice device={row} onGetDevice={onGetDevice} />
               </TableCell>
             </TableRow>
           ))}
